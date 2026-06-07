@@ -1,0 +1,17 @@
+# Django & Web Framework
+Django>=6.0
+djangorestframework>=3.17
+djangorestframework-simplejwt>=5.5
+django-cors-headers>=4.9
+
+# AI & NLP
+sentence-transformers>=5.0
+scikit-learn>=1.8
+numpy>=2.0
+
+# PDF Processing
+pdfplumber>=0.11
+PyPDF2>=3.0
+
+# LLM API
+groq>=1.0
