@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Apply - {{ offer.title }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <a href="{% url 'job_offer_detail' offer.id %}" class="btn btn-ghost btn-sm" style="margin-bottom: 24px;">← Back to Job Offer</a>
+
+    <div style="max-width: 700px; margin: 0 auto;">
+        <div class="card-glass" style="padding: 40px;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 8px;">Apply for {{ offer.title }}</h2>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">{{ offer.location }} • {{ offer.get_contract_type_display }}</p>
+
+            {% if error %}
+            <div class="form-error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'apply_job' offer.id %}" enctype="multipart/form-data" id="applyForm">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" value="{{ user.first_name }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" value="{{ user.last_name }}" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                </div>
+
+                <!-- CV Upload -->
+                <div class="form-group">
+                    <label>Upload CV (PDF only) *</label>
+                    <div class="file-upload" id="fileUpload" onclick="document.getElementById('cvFile').click()">
+                        <div class="upload-icon">📄</div>
+                        <p>Click to upload your CV</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted);">PDF format only, max 10MB</p>
+                        <input type="file" id="cvFile" name="cv_file" accept=".pdf" required>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                </div>
+
+                <!-- Cover Letter -->
+                <div class="form-group">
+                    <label for="coverLetter">Cover Letter (optional)</label>
+                    <textarea id="coverLetter" name="cover_letter" class="form-control" rows="5" placeholder="Write a brief cover letter explaining why you're interested in this position..."></textarea>
+                </div>
+
+                <div style="padding: 16px; background: var(--bg-glass-light); border-radius: var(--radius-md); margin-bottom: 24px;">
+                    <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                        🤖 <strong>AI Analysis:</strong> Your CV will be automatically analyzed by our AI system to match your profile with the job requirements. You'll be able to track your application status in your dashboard.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submitBtn">
+                    Submit Application →
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // File upload display
+    document.getElementById('cvFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const nameDisplay = document.getElementById('fileName');
+        if (file) {
+            nameDisplay.textContent = '📎 ' + file.name;
+        }
+    });
+
+    // Form submission loading state
+    document.getElementById('applyForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '<span class="spinner"></span> Analyzing your CV with AI...';
+        btn.disabled = true;
+    });
+</script>
+{% endblock %}

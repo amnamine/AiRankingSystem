@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard - Algérie Télécom Careers{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <div class="dashboard-header">
+        <h1>Welcome, {{ user.first_name|default:user.username }} 👋</h1>
+        <p>Track your job applications and test invitations</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="dashboard-stats">
+        <div class="dash-stat">
+            <div class="stat-icon blue">📋</div>
+            <div class="value">{{ total_applications }}</div>
+            <div class="label">Total Applications</div>
+        </div>
+        <div class="dash-stat">
+            <div class="stat-icon orange">⏳</div>
+            <div class="value">{{ pending_count }}</div>
+            <div class="label">Pending</div>
+        </div>
+        <div class="dash-stat">
+            <div class="stat-icon green">✅</div>
+            <div class="value">{{ accepted_count }}</div>
+            <div class="label">Accepted</div>
+        </div>
+        <div class="dash-stat">
+            <div class="stat-icon red">❌</div>
+            <div class="value">{{ rejected_count }}</div>
+            <div class="label">Rejected</div>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    {% if applications %}
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Location</th>
+                    <th>Contract</th>
+                    <th>AI Score</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>
+                        <strong>{{ app.job_offer.title }}</strong>
+                        {% if app.job_offer.job.category %}
+                        <br><span style="font-size: 0.75rem; color: var(--text-muted);">{{ app.job_offer.job.category }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ app.job_offer.location }}</td>
+                    <td><span class="tag tag-blue">{{ app.job_offer.get_contract_type_display }}</span></td>
+                    <td>
+                        {% if app.ai_score is not None %}
+                        <div class="score-circle {% if app.ai_score >= 70 %}score-high{% elif app.ai_score >= 40 %}score-medium{% else %}score-low{% endif %}">
+                            {{ app.ai_score|floatformat:0 }}%
+                        </div>
+                        {% else %}
+                        <span style="color: var(--text-muted);">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ app.status }}">
+                            {% if app.status == 'pending' %}⏳{% endif %}
+                            {% if app.status == 'reviewed' %}👁️{% endif %}
+                            {% if app.status == 'test_sent' %}📝{% endif %}
+                            {% if app.status == 'accepted' %}✅{% endif %}
+                            {% if app.status == 'rejected' %}❌{% endif %}
+                            {{ app.get_status_display }}
+                        </span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.8125rem;">{{ app.applied_at|date:"M d, Y" }}</td>
+                    <td>
+                        {% if app.test_info and app.test_info.status != 'completed' %}
+                            <a href="{% url 'take_test' app.test_info.id %}" class="btn btn-accent btn-sm">Take Test →</a>
+                        {% elif app.test_info and app.test_info.status == 'completed' %}
+                            <span class="tag tag-green">Test: {{ app.test_info.score|floatformat:0 }}%</span>
+                        {% else %}
+                            <span style="color: var(--text-muted); font-size: 0.8125rem;">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No applications yet</h3>
+        <p>Start by browsing available job offers</p>
+        <a href="{% url 'job_offers' %}" class="btn btn-primary" style="margin-top: 16px;">Browse Jobs →</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

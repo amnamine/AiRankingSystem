@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Technical Test - {{ test.title }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <!-- Test Header -->
+    <div class="test-header">
+        <div>
+            <h1 style="font-size: 1.5rem; font-weight: 800;">{{ test.title }}</h1>
+            <p style="color: var(--text-muted); margin-top: 4px;">{{ test.job_offer.title }} • {{ questions|length }} questions</p>
+        </div>
+        <div class="test-timer" id="timer">{{ test.duration_minutes }}:00</div>
+    </div>
+
+    <form method="POST" action="{% url 'take_test' assignment.id %}" id="testForm">
+        {% csrf_token %}
+
+        {% for question in questions %}
+        <div class="question-card" style="animation-delay: {{ forloop.counter0 }}00ms;">
+            <div class="question-number">Question {{ forloop.counter }} of {{ questions|length }}</div>
+            <div class="question-text">{{ question.question_text }}</div>
+            <div class="options-list">
+                <div class="option-item">
+                    <input type="radio" name="question_{{ question.id }}" value="A" id="q{{ question.id }}_a" required>
+                    <label for="q{{ question.id }}_a"><strong>A.</strong> {{ question.option_a }}</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="question_{{ question.id }}" value="B" id="q{{ question.id }}_b">
+                    <label for="q{{ question.id }}_b"><strong>B.</strong> {{ question.option_b }}</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="question_{{ question.id }}" value="C" id="q{{ question.id }}_c">
+                    <label for="q{{ question.id }}_c"><strong>C.</strong> {{ question.option_c }}</label>
+                </div>
+                <div class="option-item">
+                    <input type="radio" name="question_{{ question.id }}" value="D" id="q{{ question.id }}_d">
+                    <label for="q{{ question.id }}_d"><strong>D.</strong> {{ question.option_d }}</label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div style="text-align: center; margin-top: 32px;">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitTest">Submit Test →</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Timer
+    let timeLeft = {{ test.duration_minutes }} * 60;
+    const timerEl = document.getElementById('timer');
+
+    const countdown = setInterval(() => {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft <= 60) {
+            timerEl.classList.add('warning');
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            document.getElementById('testForm').submit();
+        }
+    }, 1000);
+
+    // Confirm before leaving
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
+    // Remove unload listener on submit
+    document.getElementById('testForm').addEventListener('submit', function() {
+        window.removeEventListener('beforeunload', function(){});
+    });
+</script>
+{% endblock %}

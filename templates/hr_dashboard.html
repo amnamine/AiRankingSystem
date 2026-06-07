@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}HR Dashboard - Algérie Télécom Careers{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <div class="page-title-bar">
+        <div>
+            <h1>HR Dashboard</h1>
+            <p style="color: var(--text-secondary); margin-top: 4px;">Manage job offers and review applications</p>
+        </div>
+        <a href="{% url 'hr_create_offer' %}" class="btn btn-primary">+ Create Job Offer</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="dashboard-stats">
+        <div class="dash-stat">
+            <div class="stat-icon blue">📋</div>
+            <div class="value">{{ active_offers }}</div>
+            <div class="label">Active Offers</div>
+        </div>
+        <div class="dash-stat">
+            <div class="stat-icon green">👥</div>
+            <div class="value">{{ total_applications }}</div>
+            <div class="label">Total Applications</div>
+        </div>
+        <div class="dash-stat">
+            <div class="stat-icon orange">🤖</div>
+            <div class="value">{{ avg_score }}%</div>
+            <div class="label">Avg AI Score</div>
+        </div>
+    </div>
+
+    <!-- Select Offer -->
+    <div class="section-header">
+        <h2>Job Offers</h2>
+        <p>Select a job offer to view its applications</p>
+    </div>
+
+    <div class="offer-select-list">
+        {% for offer in offers %}
+        <a href="{% url 'hr_dashboard' %}?offer_id={{ offer.id }}" class="offer-select-item {% if selected_offer.id == offer.id %}active{% endif %}" style="text-decoration: none;">
+            <div class="offer-select-info">
+                <h4 style="color: var(--text-primary);">{{ offer.title }}</h4>
+                <span>{{ offer.location }} • {{ offer.get_contract_type_display }} • {{ offer.published_date|date:"M d, Y" }}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="tag {% if offer.status == 'active' %}tag-green{% else %}tag-orange{% endif %}">{{ offer.get_status_display }}</span>
+                <span class="app-count">{{ offer.applications.count }} apps</span>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3>No job offers yet</h3>
+            <p>Create your first job offer to start receiving applications</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Applications for selected offer -->
+    {% if selected_offer %}
+    <div style="margin-top: 40px;">
+        <div class="section-header">
+            <h2>Applications for "{{ selected_offer.title }}"</h2>
+            <p>Candidates ranked by AI matching score</p>
+        </div>
+
+        {% if applications %}
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Candidate</th>
+                        <th>Email</th>
+                        <th>AI Score</th>
+                        <th>Status</th>
+                        <th>Applied</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>
+                            <span style="font-weight: 800; color: {% if forloop.counter <= 3 %}var(--accent-400){% else %}var(--text-muted){% endif %};">
+                                #{{ forloop.counter }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>{{ app.candidate.first_name }} {{ app.candidate.last_name }}</strong>
+                            <br><span style="font-size: 0.75rem; color: var(--text-muted);">@{{ app.candidate.username }}</span>
+                        </td>
+                        <td style="font-size: 0.875rem;">{{ app.candidate.email }}</td>
+                        <td>
+                            {% if app.ai_score is not None %}
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div class="score-circle {% if app.ai_score >= 70 %}score-high{% elif app.ai_score >= 40 %}score-medium{% else %}score-low{% endif %}">
+                                    {{ app.ai_score|floatformat:0 }}%
+                                </div>
+                            </div>
+                            {% else %}
+                            <span style="color: var(--text-muted);">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ app.status }}">{{ app.get_status_display }}</span>
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 0.8125rem;">{{ app.applied_at|date:"M d" }}</td>
+                        <td>
+                            <div class="action-group">
+                                <a href="{% url 'hr_application_detail' app.id %}" class="btn btn-outline btn-sm">View Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">👥</div>
+            <h3>No applications yet</h3>
+            <p>No candidates have applied for this position yet.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block title %}{{ offer.title }} - Algérie Télécom Careers{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <a href="{% url 'job_offers' %}" class="btn btn-ghost btn-sm" style="margin-bottom: 24px;">← Back to Job Offers</a>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+        <!-- Main Content -->
+        <div>
+            <div class="offer-detail-hero">
+                <div class="offer-detail-meta">
+                    <span class="tag tag-blue">{{ offer.get_contract_type_display }}</span>
+                    <span class="tag tag-orange">📍 {{ offer.location }}</span>
+                    {% if offer.job.category %}
+                    <span class="tag tag-purple">{{ offer.job.category }}</span>
+                    {% endif %}
+                    <span class="tag tag-green">{{ offer.get_status_display }}</span>
+                </div>
+                <h1>{{ offer.title }}</h1>
+                <div class="offer-detail-description">
+                    {{ offer.description|linebreaksbr }}
+                </div>
+            </div>
+
+            {% if missions %}
+            <div class="card" style="margin-top: 24px;">
+                <h3 style="margin-bottom: 16px; font-size: 1.125rem;">📋 Job Missions & Responsibilities</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;">
+                    {% for mission in missions %}
+                    <li style="padding: 12px 16px; background: var(--bg-secondary); border-radius: var(--radius-md); font-size: 0.9375rem; color: var(--text-secondary);">
+                        <span style="color: var(--primary-400); font-weight: 700; margin-right: 8px;">{{ forloop.counter }}.</span>
+                        {{ mission.description }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="offer-detail-sidebar">
+            <!-- Apply Card -->
+            <div class="sidebar-card" style="text-align: center;">
+                {% if has_applied %}
+                    <div style="padding: 12px; background: rgba(34, 197, 94, 0.1); border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <span style="color: var(--success-400); font-weight: 600;">✓ You have already applied</span>
+                    </div>
+                    <a href="{% url 'candidate_dashboard' %}" class="btn btn-outline" style="width: 100%;">View Dashboard</a>
+                {% elif user.is_authenticated %}
+                    <a href="{% url 'apply_job' offer.id %}" class="btn btn-primary btn-lg" style="width: 100%;">Apply Now →</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg" style="width: 100%;">Login to Apply</a>
+                    <p style="margin-top: 12px; font-size: 0.8125rem; color: var(--text-muted);">
+                        Don't have an account? <a href="{% url 'register' %}">Sign up</a>
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Required Skills -->
+            {% if offer.job.required_skills %}
+            <div class="sidebar-card">
+                <h3>🛠️ Required Skills</h3>
+                <div class="skills-list">
+                    {% for skill in offer.job.required_skills|split:"," %}
+                    <span class="tag tag-blue">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if offer.job.required_education %}
+            <div class="sidebar-card">
+                <h3>🎓 Required Education</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9375rem;">{{ offer.job.required_education }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Certifications -->
+            {% if offer.job.required_certifications %}
+            <div class="sidebar-card">
+                <h3>📜 Certifications</h3>
+                <div class="skills-list">
+                    {% for cert in offer.job.required_certifications|split:"," %}
+                    <span class="tag tag-green">{{ cert }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Details -->
+            <div class="sidebar-card">
+                <h3>📌 Details</h3>
+                <ul>
+                    <li>Published: {{ offer.published_date|date:"M d, Y" }}</li>
+                    {% if offer.deadline %}
+                    <li>Deadline: {{ offer.deadline|date:"M d, Y" }}</li>
+                    {% endif %}
+                    <li>Contract: {{ offer.get_contract_type_display }}</li>
+                    <li>Location: {{ offer.location }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

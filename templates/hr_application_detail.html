@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% block title %}Application Detail - {{ application.candidate.first_name }} {{ application.candidate.last_name }}{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <a href="{% url 'hr_dashboard' %}?offer_id={{ application.job_offer.id }}" class="btn btn-ghost btn-sm" style="margin-bottom: 24px;">← Back to Applications</a>
+
+    <!-- Header -->
+    <div class="card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <h1 style="font-size: 1.5rem; font-weight: 800;">{{ application.candidate.first_name }} {{ application.candidate.last_name }}</h1>
+                <p style="color: var(--text-muted);">{{ application.candidate.email }} • Applied {{ application.applied_at|date:"M d, Y" }}</p>
+                <p style="margin-top: 8px;">
+                    <span class="tag tag-blue">{{ application.job_offer.title }}</span>
+                    <span class="status-badge status-{{ application.status }}" style="margin-left: 8px;">{{ application.get_status_display }}</span>
+                </p>
+            </div>
+            <div class="action-group">
+                {% if can_send_test %}
+                <button class="btn btn-accent btn-sm" onclick="sendTest({{ application.id }})">📝 Send Test</button>
+                {% elif test_sent %}
+                <span class="tag tag-green">✓ Test Sent</span>
+                {% endif %}
+                <button class="btn btn-success btn-sm" onclick="updateStatus({{ application.id }}, 'accepted')">✅ Accept</button>
+                <button class="btn btn-danger btn-sm" onclick="updateStatus({{ application.id }}, 'rejected')">❌ Reject</button>
+                {% if application.cv_file %}
+                <a href="{{ application.cv_file.url }}" class="btn btn-outline btn-sm" target="_blank">📄 View CV</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Analysis -->
+    <div class="ai-analysis">
+        <!-- Main Score -->
+        <div class="ai-score-main">
+            <div class="ai-score-ring" style="--score-deg: {{ application.ai_score|default:0 }}deg;">
+                {% if application.ai_score is not None %}
+                    <span style="font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--primary-400), var(--accent-400)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        {{ application.ai_score|floatformat:0 }}%
+                    </span>
+                {% else %}
+                    <span style="color: var(--text-muted);">N/A</span>
+                {% endif %}
+            </div>
+            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 4px;">Overall AI Score</h3>
+            <p style="color: var(--text-muted); font-size: 0.8125rem;">Combined Approach 1 + Approach 2</p>
+        </div>
+
+        <!-- Score Breakdown -->
+        <div class="card">
+            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 20px;">📊 Score Breakdown</h3>
+            <div class="score-breakdown">
+                <!-- Profile Score (35%) -->
+                <div class="score-item">
+                    <div class="score-item-header">
+                        <span class="score-item-label">Profile Match (35%)</span>
+                        <span class="score-item-value">{{ application.ai_profile_score|floatformat:1|default:"—" }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill {% if application.ai_profile_score >= 70 %}high{% elif application.ai_profile_score >= 40 %}medium{% else %}low{% endif %}" style="width: {{ application.ai_profile_score|default:0 }}%;"></div>
+                    </div>
+                </div>
+
+                <!-- Semantic Score (30%) -->
+                <div class="score-item">
+                    <div class="score-item-header">
+                        <span class="score-item-label">Semantic Similarity (30%)</span>
+                        <span class="score-item-value">{{ application.ai_semantic_score|floatformat:1|default:"—" }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill {% if application.ai_semantic_score >= 70 %}high{% elif application.ai_semantic_score >= 40 %}medium{% else %}low{% endif %}" style="width: {{ application.ai_semantic_score|default:0 }}%;"></div>
+                    </div>
+                </div>
+
+                <!-- Mission Score (20%) -->
+                <div class="score-item">
+                    <div class="score-item-header">
+                        <span class="score-item-label">Mission Relevance (20%)</span>
+                        <span class="score-item-value">{{ application.ai_mission_score|floatformat:1|default:"—" }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill {% if application.ai_mission_score >= 70 %}high{% elif application.ai_mission_score >= 40 %}medium{% else %}low{% endif %}" style="width: {{ application.ai_mission_score|default:0 }}%;"></div>
+                    </div>
+                </div>
+
+                <!-- Category Score (10%) -->
+                <div class="score-item">
+                    <div class="score-item-header">
+                        <span class="score-item-label">Category Match (10%)</span>
+                        <span class="score-item-value">{{ application.ai_category_score|floatformat:1|default:"—" }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill {% if application.ai_category_score >= 70 %}high{% elif application.ai_category_score >= 40 %}medium{% else %}low{% endif %}" style="width: {{ application.ai_category_score|default:0 }}%;"></div>
+                    </div>
+                </div>
+
+                <!-- Quality Score (5%) -->
+                <div class="score-item">
+                    <div class="score-item-header">
+                        <span class="score-item-label">Resume Quality (5%)</span>
+                        <span class="score-item-value">{{ application.ai_quality_score|floatformat:1|default:"—" }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill {% if application.ai_quality_score >= 70 %}high{% elif application.ai_quality_score >= 40 %}medium{% else %}low{% endif %}" style="width: {{ application.ai_quality_score|default:0 }}%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="detail-grid" style="margin-top: 24px;">
+        <!-- Matched Skills -->
+        <div class="card">
+            <div class="detail-section">
+                <h3>✅ Matched Skills</h3>
+                {% if matched_skills %}
+                <div class="skills-list">
+                    {% for skill in matched_skills %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--text-muted); font-size: 0.875rem;">No skills data available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Matched Missions -->
+        <div class="card">
+            <div class="detail-section">
+                <h3>🎯 Matched Missions</h3>
+                {% if matched_missions %}
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                    {% for mission in matched_missions %}
+                    <li style="font-size: 0.875rem; color: var(--text-secondary); padding: 8px 12px; background: var(--bg-secondary); border-radius: var(--radius-sm);">{{ mission }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p style="color: var(--text-muted); font-size: 0.875rem;">No mission data available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Strengths -->
+        <div class="card">
+            <div class="detail-section">
+                <h3>💪 Strengths</h3>
+                {% if strengths %}
+                <div class="skills-list">
+                    {% for strength in strengths %}
+                    <span class="skill-tag">{{ strength }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--text-muted); font-size: 0.875rem;">No strengths data available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Weaknesses -->
+        <div class="card">
+            <div class="detail-section">
+                <h3>⚠️ Weaknesses</h3>
+                {% if weaknesses %}
+                <div class="skills-list">
+                    {% for weakness in weaknesses %}
+                    <span class="weakness-tag">{{ weakness }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: var(--text-muted); font-size: 0.875rem;">No weaknesses identified</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Summary -->
+    {% if application.ai_summary %}
+    <div class="card" style="margin-top: 24px;">
+        <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px;">🤖 AI Assessment Summary</h3>
+        <div class="ai-summary-text">
+            {{ application.ai_summary|linebreaksbr }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    async function sendTest(appId) {
+        if (!confirm('Send technical test to this candidate?')) return;
+        try {
+            const res = await fetch(`/hr/send-test/${appId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Test sent successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('Error sending test');
+        }
+    }
+
+    async function updateStatus(appId, status) {
+        const labels = {accepted: 'accept', rejected: 'reject'};
+        if (!confirm(`Are you sure you want to ${labels[status]} this candidate?`)) return;
+        
+        const formData = new FormData();
+        formData.append('status', status);
+        
+        try {
+            const res = await fetch(`/hr/update-status/${appId}/`, {
+                method: 'POST',
+                headers: {'X-CSRFToken': getCookie('csrftoken')},
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('Error updating status');
+        }
+    }
+
+    // Animate score bars on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const ring = document.querySelector('.ai-score-ring');
+        if (ring) {
+            const score = parseFloat('{{ application.ai_score|default:0 }}');
+            const deg = (score / 100) * 360;
+            ring.style.setProperty('--score-deg', deg + 'deg');
+        }
+    });
+</script>
+{% endblock %}

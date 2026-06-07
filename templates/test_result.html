@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Test Result{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <div class="result-card">
+        <h2 style="font-size: 1.5rem; font-weight: 800;">Test Completed!</h2>
+        <p style="color: var(--text-muted); margin-top: 8px;">{{ assignment.test.title }}</p>
+
+        <div class="result-score {% if assignment.score >= assignment.test.passing_score %}pass{% else %}fail{% endif %}">
+            {{ assignment.score|floatformat:0 }}%
+        </div>
+
+        <p style="font-size: 1.125rem; font-weight: 600; margin-bottom: 8px;">
+            {% if assignment.score >= assignment.test.passing_score %}
+                🎉 Congratulations! You passed!
+            {% else %}
+                Unfortunately, you did not reach the passing score.
+            {% endif %}
+        </p>
+
+        {% if correct is not None %}
+        <p style="color: var(--text-secondary);">
+            You answered {{ correct }} out of {{ total }} questions correctly.
+        </p>
+        {% endif %}
+
+        <p style="color: var(--text-muted); margin-top: 16px; font-size: 0.875rem;">
+            Passing score: {{ assignment.test.passing_score }}%
+        </p>
+
+        <a href="{% url 'candidate_dashboard' %}" class="btn btn-primary" style="margin-top: 24px;">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

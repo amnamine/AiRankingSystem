@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Algérie Télécom Careers - AI-Powered Recruitment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 AI-Powered Recruitment Platform</div>
+            <h1>
+                Find Your Future at<br>
+                <span class="gradient-text">Algérie Télécom</span>
+            </h1>
+            <p>
+                Join Algeria's leading telecommunications operator. Our AI-powered platform matches your skills with the perfect opportunity using advanced semantic analysis.
+            </p>
+            <div class="hero-actions">
+                <a href="{% url 'job_offers' %}" class="btn btn-primary btn-lg">Browse Job Offers →</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-outline btn-lg">Create Account</a>
+                {% endif %}
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-value">{{ active_offers_count|default:"0" }}+</div>
+                    <div class="stat-label">Active Positions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">92%</div>
+                    <div class="stat-label">AI Matching Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">Time Saved</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    {% if categories %}
+    <section class="categories-section">
+        <div class="section-header">
+            <h2>Job Categories</h2>
+            <p>Explore opportunities across different departments</p>
+        </div>
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="{% url 'job_offers' %}?category={{ category }}" class="category-card">
+                <div class="cat-icon">💼</div>
+                <h3>{{ category }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Features Section -->
+    <section class="categories-section">
+        <div class="section-header">
+            <h2>Why Choose Our Platform?</h2>
+            <p>Powered by cutting-edge AI technology</p>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="cat-icon">🤖</div>
+                <h3>AI Resume Matching</h3>
+                <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.875rem;">
+                    Semantic analysis matches your CV to job requirements using advanced NLP
+                </p>
+            </div>
+            <div class="category-card">
+                <div class="cat-icon">📊</div>
+                <h3>Smart Ranking</h3>
+                <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.875rem;">
+                    Multi-criteria scoring engine ranks candidates objectively
+                </p>
+            </div>
+            <div class="category-card">
+                <div class="cat-icon">📝</div>
+                <h3>Technical Tests</h3>
+                <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.875rem;">
+                    Online MCQ tests with automatic scoring and time management
+                </p>
+            </div>
+            <div class="category-card">
+                <div class="cat-icon">💬</div>
+                <h3>AI Chatbot</h3>
+                <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.875rem;">
+                    24/7 intelligent assistant to guide you through the process
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,848 @@
+People’s Democratic Republic of Algeria
+Ministry of Higher Education and Scientific Research
+Blida 1 University
+F aculty of Sciences
+Department of Computer Science
+Bachelor’s Report
+In Computer Science
+Specialty:
+Information Systems and Software Engineering (ISIL)
+Computer Systems (SIQ)
+W eb-Based Recruitment System with
+AI-Powered Resume Matching
+Realized by:
+Amara Soumia (ISIL)
+Boussaha Rania (ISIL)
+Bentouta Nour el houda
+(SIQ)Supervised by:
+Pr. F areh
+Jury Members:
+Mr. Examiner (Examiner)
+Academic Y ear: 2025 / 2026
+Acknowledgements
+First and foremost, we would like to express our sincere gratitude to our families for
+their unconditional love, continuous support, and encouragement throughout our studies.
+Their presence and belief in us have always been a source of strength and motivation.
+W e would also like to thank our supervisor, Pr. F areh, for his guidance, valuable
+advice, and constructive feedback throughout the realization of this project.
+W e extend our thanks to all our teachers and to the Department of Computer Sci-
+ence at Blida 1 University for the quality of education and support provided during our
+academic journey .
+W e also thank the jury members for accepting to evaluate our work.
+Amara Soumia, Boussaha Rania, and Bentouta Nour El Houda
+1
+Abstract
+This project presents the design and implementation of an intelligent AI-based recruit-
+ment management platform for Algérie Télécom. The platform automates the recruitment
+process through semantic CV analysis, intelligent candidate matching, application track-
+ing, and HR management tools. Developed using Django and modern web technologies,
+the system integrates artificial intelligence techniques based on SentenceT ransformers and
+cosine similarity to improve candidate evaluation and recruitment eﬀiciency .
+Keywords: artificial intelligence, recruitment management, semantic matching,candidate
+analysis.
+Résumé
+Ce projet présente la conception et la réalisation d’une plateforme intelligente de gestion
+du recrutement basée sur l’intelligence artificielle pour Algérie Télécom. La plateforme
+automatise le processus de recrutement grâce à l’analyse sémantique des CV, au matching
+intelligent des candidats, au suivi des candidatures et aux outils de gestion des ressources
+humaines. Développé avec Django et des technologies web modernes, le système intègre
+des techniques d’intelligence artificielle basées sur SentenceT ransformers et la similarité
+cosinus afin d’améliorer l’évaluation des candidats et l’eﬀicacité du recrutement.
+Mots-clés : intelligence artificielle, gestion du recrutement, matching sémantique, anal-
+yse des candidats.
+ڪٌۘिऻﺍ
+ሒᇼݬޚٷ؇৖৑ﺀﺍ Ⴄ၍ ᄳᄟﺍ আॻ༟ ﺩﺍﺭﺓﺍܳٺިޖ٭ژّأٺ݄ڎ ৕৑ ّݱ݄ࡗࡲﻭّޚިߌߵ݁ٷݱ۰ﺫ܋٭۰ ሌᇿﻭﻉﺇ ๤དྷৎ৊ڎﻑ۱ڍﺍﺍ ዛኗ
+ଫଃފይዧ ሒᇿ৖৑ᄴᄟܹ٭ܭﺍ ༲ﻝﺍܳٺ ఈః༠ ܹ٭۰ﺍܳٺިޖ٭ژ݆݁ ᆇᅦ ٺ۰ஓ஄ٷݱ۰ً؊ ৎ৊ݞﺍ߉ߵ.ّگިﻡﺍ ੊ﺕﺍࠍ ৖৑݁ޝݿފ۰ﺍّݱ؇ ဦܳݱ؇ࠍ
+ﺃﺩﻭﺍﺕ ሌᇿݪ؇ڣ۰ﺇ ৕৑ٴؕޗܹٴ؇ﺕﺍܳٺިޖ٭ژ،ً؇ ྥོٷ؇ݬص،ﻭ ৎ৊ﻭﺍ ඔ൹᛻ො ஙଫଐৎ৊ﺍ ඔ൹܋٭۰ً ᄳᄟޚ؇ًگ۰ﺍ ৎ৊۰،ﻭﺍ ਃಾﺍᄳᄟﺍ
+ّگٷ٭؇ﺕ ༇ ံ۰،݁ؕﺩ ਒ಱڎ੆ﺍࠍ ೞಱ ﻭّگٷ٭؇ﺕﺍܳި Django ڎﺍﻡ༱ّޚިߌߵﺍܳٷޙ؇ﻡً؇ݿٺ ቕቆ .ل۰ ๤དྷྟިﺍﺭﺩﺍܳ ৎ৊ﺇﺩﺍﺭﺓﺍ 
+ܭ༥݆݁ﺃ ሒᇃލ؇ً۬ﺍܳـܝި ྥﻭۊިﺍﺭﺯ݁٭۰ﺍܳ SentenceTransformers আॻ༟ أٺ݄ڎﺓৎ৊ﺍ ሒᇼݬޚٷ؇৖৑ﺀﺍ Ⴄ၍ ᄳᄟﺍ
+ܹ٭۰ﺍܳٺިޖ٭ژ. ᆇᅦ ﻭﺭڣؕ܋ڰ؇ﺀﺓ ඔ൹᛻ො ஙଫଐৎ৊ّگ٭ࡗࡲﺍ ඔ൹ފොູ
+.ඔ൹᛻ො ஙଫଐৎ৊ܹ٭ܭﺍ ොູ ܳ٭۰،৖৑ᄴᄟޚ؇ًگ۰ﺍ ৎ৊،ﺇﺩﺍﺭﺓﺍܳٺިޖ٭ژ،ﺍ ሒᇼݬޚٷ؇৖৑ﺀﺍ Ⴄ၍ ᄳᄟﺍؼמ١: ոء׫िऻﺕﺍ ոஈ࿦࿮ﺍڤ
+2
+Contents
+Acknowledgements 1
+Abstract 2
+List of Acronyms 1
+1 General Introduction 2
+1.1 Context . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.2 Problem Statement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+1.2.1 T raditional Recruitment Systems . . . . . . . . . . . . . . . . . . . 2
+1.2.2 Limitations of Existing Systems . . . . . . . . . . . . . . . . . . . . 2
+1.2.3 Positioning of Our Contribution . . . . . . . . . . . . . . . . . . . . 3
+1.3 Research Questions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+1.4 Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+1.4.1 Centralize Recruitment Management . . . . . . . . . . . . . . . . . 4
+1.4.2 Automate CV Analysis . . . . . . . . . . . . . . . . . . . . . . . . . 4
+1.4.3 Implement Intelligent Candidate Matching Using Semantic Analysis 4
+1.4.4 Provide Interactive Dashboards for Candidates and HR Managers . 4
+1.4.5 Improve Recruitment Decision-Making Through Data-Driven Insights 4
+1.5 Report Organization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+2 System Design and Modeling 6
+2.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.2 Requirements Specification . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.2.1 Actors Identification . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.2.2 F unctional Requirements . . . . . . . . . . . . . . . . . . . . . . . . 6
+2.3 System Analysis and Design Using UML Diagrams . . . . . . . . . . . . . 7
+2.3.1 Use Case Diagrams . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+2.3.2 Sequence Diagrams . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+2.3.3 Class Diagram . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+2.4 AI Resume Matching System . . . . . . . . . . . . . . . . . . . . . . . . . 20
+2.4.1 AI-Powered Job Resume Matching Pipeline . . . . . . . . . . . . . 20
+2.4.2 Input Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+3
+2.4.3 T ext Extraction & Preprocessing . . . . . . . . . . . . . . . . . . . 21
+2.4.4 Embedding Generation . . . . . . . . . . . . . . . . . . . . . . . . . 21
+2.4.5 Matching & F eature Extraction . . . . . . . . . . . . . . . . . . . . 21
+2.4.6 Scoring Engine . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+2.4.7 AI Summary Generation . . . . . . . . . . . . . . . . . . . . . . . . 25
+2.4.8 Output & Storage . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+2.4.9 AI Resume Matching System T esting . . . . . . . . . . . . . . . . . 26
+2.5 Chatbot Assistant . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+2.6 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+3 Implementation and T esting 28
+3.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+3.2 W ork Environment . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+3.2.1 Hardware Environment . . . . . . . . . . . . . . . . . . . . . . . . 28
+3.2.2 Development T ools . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+3.3 Application Interfaces . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+3.3.1 Home Page (Landing Page) . . . . . . . . . . . . . . . . . . . . . . 29
+3.3.2 Job Offers List Page . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+3.3.3 Application F orm . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+3.3.4 Online T echnical T est . . . . . . . . . . . . . . . . . . . . . . . . . 31
+3.3.5 Candidate Dashboard . . . . . . . . . . . . . . . . . . . . . . . . . 31
+3.3.6 HR Dashboard . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+3.3.7 Integrated AI Chatbot . . . . . . . . . . . . . . . . . . . . . . . . . 33
+3.4 T esting and V alidation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+3.4.1 Global T esting Approach . . . . . . . . . . . . . . . . . . . . . . . 33
+3.4.2 V alidation with the Domain Expert . . . . . . . . . . . . . . . . . . 33
+3.5 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+4 General Conclusion 35
+4.1 F uture Perspectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+Bibliography 36
+4
+List of Figures
+2.1 Global Use Case Diagram . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+2.2 Pass T echnical T est Use Case Diagram . . . . . . . . . . . . . . . . . . . . 9
+2.3 Submit Application Use Case Diagram . . . . . . . . . . . . . . . . . . . . 9
+2.4 Evaluate Application Use Case Diagram . . . . . . . . . . . . . . . . . . . 10
+2.5 Sequence Diagram — submit job application . . . . . . . . . . . . . . . . . 11
+2.6 Sequence Diagram — send technical test . . . . . . . . . . . . . . . . . . . 14
+2.7 Sequence Diagram — creat job offer . . . . . . . . . . . . . . . . . . . . . 16
+2.8 Platform Class Diagram . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+2.9 AI-Powered Job Resume Matching Pipeline . . . . . . . . . . . . . . . . . 20
+3.1 Platform Home Page . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+3.2 Job Offers List Page . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+3.3 Application Submission F orm . . . . . . . . . . . . . . . . . . . . . . . . . 30
+3.4 Online T echnical T est Interface . . . . . . . . . . . . . . . . . . . . . . . . 31
+3.5 Candidate Dashboard . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+3.6 HR Manager Dashboard . . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+3.7 AI Chatbot Interface in Action . . . . . . . . . . . . . . . . . . . . . . . . 33
+5
+List of T ables
+2.1 Role Assignment by Actor . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+2.2 T extual Description — Submit Job Application . . . . . . . . . . . . . . . 11
+2.3 T extual Description — Send T echnical T est . . . . . . . . . . . . . . . . . 14
+2.4 T extual Description — Create Job Offer . . . . . . . . . . . . . . . . . . . 16
+3.1 Computer Specifications Used . . . . . . . . . . . . . . . . . . . . . . . . . 28
+6
+List of Acronyms
+AI Artificial Intelligence
+API Application Programming Interface
+UML Unified Modeling Language
+CSRF Cross-Site Request F orgery
+DRF Django REST F ramework
+JWT JSON W eb T oken
+MCQ Multiple Choice Questions
+PDF Portable Document F ormat
+SQL Structured Query Language
+HR Human Resources
+1
+General Introduction
+1.1 Context
+Algérie Télécom is the leading telecommunications operator in Algeria, providing fixed-
+line telephony , high-speed internet, and data transmission services nationwide. As a major
+public company with thousands of employees, it receives a high volume of job applications
+for various technical and administrative positions.
+Currently , the recruitment process at Algérie Télécom is managed manually . HR
+managers face several challenges: processing hundreds of CV s per offer, ensuring objective
+candidate evaluation, reducing response time, and tracking application status eﬀiciently .
+These challenges highlight the need for an intelligent, automated recruitment system
+capable of analyzing CV s semantically , ranking candidates objectively , and streamlining
+the entire recruitment workflow. This project aims to fulfill this need by developing an
+AI-powered recruitment management platform tailored to Algérie Télécom.
+1.2 Problem Statement
+Manual candidate selection requires significant time and effort from HR managers.
+1.2.1 T raditional Recruitment Systems
+T raditional recruitment systems rely on manual CV screening and keyword-based searches.
+These systems present several limitations:
+• Time-consuming manual review of applications.
+• Subjective candidate evaluation.
+• Lack of semantic understanding.
+• No automated ranking mechanism.
+1.2.2 Limitations of Existing Systems
+Based on the comparative analysis, the main limitations of existing systems are:
+2
+• No integrated technical testing module.
+• Absence of AI chatbot for candidate assistance.
+• Limited automation of the recruitment workflow.
+The recruitment process at Algérie Télécom faces two main challenges.
+First , recruitment management lacks centralized data tracking, automated workflows,
+and communication tools.
+Second , the candidate matching system relies on simple keyword searches without
+semantic understanding.
+As a result, the process suffers from delays, lack of traceability , and missed qualified
+candidates.
+1.2.3 Positioning of Our Contribution
+T o address these limitations, our system proposes:
+• Semantic CV matching using SentenceT ransformers and cosine similarity .
+• Integrated online technical testing module.
+• AI-powered chatbot for candidate guidance.
+• Complete automation of the recruitment workflow with centralized data tracking.
+• Objective candidate ranking based on AI scoring.
+These improvements provide an intelligent platform combining centralized manage-
+ment with AI-powered semantic matching.
+1.3 Research Questions
+This project seeks to answer the following research questions:
+• How can artificial intelligence improve recruitment management?
+• How can semantic analysis improve candidate-job matching?
+• How can the recruitment process be automated eﬀiciently?
+1.4 Objectives
+The main objectives of the project are:
+3
+1.4.1 Centralize Recruitment Management
+The first objective is to create a centralized platform where all recruitment data is stored
+in a single database. This includes job offers, candidate applications, CV s, test results,
+and communication history . Centralization eliminates scattered information across emails
+and spreadsheets, allowing HR managers to access and manage all recruitment activities
+from one unified interface.
+1.4.2 Automate CV Analysis
+The second objective is to automate the extraction and analysis of information from
+candidate CV s. Instead of manually reading each CV, the system will automatically
+extract key information such as skills, education, work experience, certifications, and
+contact details. This automation significantly reduces the time HR managers spend on
+initial candidate screening.
+1.4.3 Implement Intelligent Candidate Matching Using Seman-
+tic Analysis
+The third objective is to develop an AI-powered matching engine that goes beyond simple
+keyword searches. Using semantic analysis and natural language processing (NLP), the
+system will understand the meaning and context of text in both job descriptions and
+CV s. This allows the system to identify relevant candidates even when different words or
+expressions are used, ensuring more accurate and intelligent matching.
+1.4.4 Provide Interactive Dashboards for Candidates and HR
+Managers
+The fourth objective is to design user-friendly dashboards tailored to each user type.
+Candidates will have a dashboard to track their application status, view test invitations,
+and receive feedback. HR managers will have a dashboard to monitor all applications,
+view AI-generated scores, filter candidates, and manage the recruitment workflow. These
+dashboards improve transparency and user experience.
+1.4.5 Improve Recruitment Decision-Making Through Data-Driven
+Insights
+The fifth objective is to support HR managers with data-driven insights. The system
+will provide AI-generated scores, candidate rankings, skill gap analysis, and recruitment
+analytics. These insights help HR managers make objective, consistent, and informed
+hiring decisions rather than relying on subjective judgment alone.
+4
+1.5 Report Organization
+This thesis is structured into four main chapters.
+Chapter 1 presents the context, problem statement, research questions, and objec-
+tives.
+Chapter 2 provides a comprehensive review of existing literature on intelligent re-
+cruitment systems, CV/job matching techniques, and chatbots.
+Chapter 3 covers the system design, including requirements specification, UML mod-
+eling, and the AI matching system.
+Chapter 4 describes the technical implementation, development environment, tech-
+nologies used, application interfaces, and test results.
+Finally , a general conclusion summarizes the contributions, identifies limitations, and
+proposes future perspectives.
+5
+System Design and Modeling
+2.1 Introduction
+Analysis and design are essential phases in the development of a software system. This
+chapter presents the architecture of our platform through UML diagrams and the descrip-
+tion of main functionalities.
+2.2 Requirements Specification
+2.2.1 Actors Identification
+The platform involves three main types of actors:
+• Candidate: External user who consults job offers, submits applications, takes
+technical tests, and tracks application status.
+• HR Manager (Recruiter): Internal manager who publishes offers, reviews ap-
+plications, manages tests, and makes final decisions.
+• Administrator: T echnical manager of the platform, responsible for system config-
+uration and user account management.
+2.2.2 F unctional Requirements
+6
+T able 2.1: Role Assignment by Actor
+Actor Role
+Candidate
+• Create an account and manage their profile.
+• Consult available job offers.
+• Submit an application with CV upload (PDF for-
+mat).
+• T ake online technical tests.
+• T rack application status.
+• Interact with the AI chatbot.
+HR Manager
+• Publish and manage job offers.
+• Consult and filter received applications.
+• Review technical test results.
+• V alidate or reject applications.
+• Manage the recruitment dashboard.
+Administrator
+• Manage user accounts.
+• Configure platform settings.
+• Monitor system logs.
+2.3 System Analysis and Design Using UML Dia-
+grams
+2.3.1 Use Case Diagrams
+Use case diagrams provide a graphical overview of interactions between actors and the
+system. They help identify main functionalities and their relationships.
+7
+Figure 2.1: Global Use Case Diagram
+8
+Figure 2.2: Pass T echnical T est Use Case Diagram
+Figure 2.3: Submit Application Use Case Diagram
+9
+Figure 2.4: Evaluate Application Use Case Diagram
+2.3.2 Sequence Diagrams
+UML sequence diagrams describe interactions between system objects in precise chrono-
+logical order. They help understand the execution flow of key platform processes .
+10
+Figure 2.5: Sequence Diagram — submit job application
+Submit Job Application Process
+T able 2.2: T extual Description — Submit Job Applica-
+tion
+Identification Name: Submit a job application
+Objective: Allow the candidate to apply for a job offer
+by submitting their CV.
+Actors: Candidate, System
+11
+Preconditions
+• The candidate has an active account.
+• The candidate is logged into the platform.
+• A job offer is published and available.
+• The candidate has not already applied for this offer.
+Postconditions
+• The application is saved in the database.
+• The AI score is calculated.
+• The application status is set to ”Pending” .
+Nominal Sce-
+nario1. The candidate browses the available job offers.
+2. The system displays the list of job offers.
+3. The candidate selects a job offer.
+4. The system displays the job offer details.
+5. The candidate requests to apply .
+6. The system verifies authentication.
+7. [V erification result: authenticated]
+8. The system checks if the candidate has already ap-
+plied.
+9. [V erification result: not applied yet]
+10. The system displays the application form.
+11. The candidate submits the form with CV.
+12. The system validates the form data.
+13. [V alidation result: valid]
+14. The system saves the application.
+15. The system analyzes the resume with AI.
+16. The system calculates the AI matching score.
+17. The system confirms the application with status
+”Pending” .
+12
+Alternative Sce-
+nariosA1: User not authenticated
+If the user is not logged in, the system redirects the
+candidate to the login page. After successful login, the
+application process resumes.
+A2: Candidate already applied
+If the candidate has already applied for the same job
+offer, the system displays an error message: ”Y ou have
+already applied for this offer. ”
+A3: F orm data invalid
+If the submitted form data is invalid (missing fields,
+wrong format), the system displays validation errors
+and asks the candidate to correct them.
+Error Scenarios E1: CV upload fails
+The CV file is corrupted or exceeds the size limit. The
+system displays an error message.
+E2: Database save error
+The application cannot be saved due to a database
+issue. The system displays a technical error message.
+E3: AI analysis fails
+The resume cannot be processed by the AI system. The
+application is saved but the AI score is set to null for
+manual review.
+13
+Figure 2.6: Sequence Diagram — send technical test
+T echnical T est Assignment Process
+T able 2.3: T extual Description — Send T echnical T est
+Identification Name: Send technical test to candidate
+Objective: Allow the HR manager to assign a technical
+test to eligible candidates based on AI score and test
+availability .
+Actors: HR Manager, System
+Preconditions
+• The candidate has submitted an application.
+• The AI matching score has been calculated.
+• A job offer is selected.
+14
+Postconditions
+• The test is assigned to the candidate.
+• The candidate receives the test.
+• The test status is confirmed as sent.
+Nominal Sce-
+nario1. The HR manager selects a job offer.
+2. The system displays the candidates list.
+3. The HR manager views a candidate profile.
+4. The system verifies the candidate AI score.
+5. [AI score >= 50 and test available] The send
+button is enabled.
+6. The HR manager requests to send the test.
+7. The system checks if the test has already been sent.
+8. [T est not sent yet] The system assigns the test to
+the candidate.
+9. The system confirms: ”T est sent successfully” .
+Alternative Sce-
+nariosA1: AI score < 50
+If the AI score is less than 50, the send button is
+disabled. The candidate is marked as ”not eligible” for
+the technical test.
+A2: No test linked to the job offer
+If no test is linked to the selected job offer, the system
+indicates ”missing test” and the send button is disabled.
+The HR manager must create a test first.
+A3: T est already sent
+If the test has already been sent to the candidate, the
+system displays an error message: ”T est already sent to
+this candidate. ”
+15
+Error Scenarios E1: System failure during assignment
+The test assignment creation fails. The system displays
+a technical error message.
+E2: No test questions available
+The test exists but contains no questions. The system
+displays an error message asking the HR manager to
+add questions.
+Figure 2.7: Sequence Diagram — creat job offer
+Create Job Offer Process
+T able 2.4: T extual Description — Create Job Offer
+16
+Identification Name: Create a job offer
+Objective: Allow the HR manager to create and pub-
+lish a new job offer with an optional technical test.
+Actors: HR Manager, System
+Preconditions
+• The HR manager is logged into the platform.
+• The HR manager has the necessary permissions.
+Postconditions
+• The job offer is saved in the database.
+• The job offer is published and visible to candidates.
+• If a test is configured, it is linked to the job offer.
+Nominal Sce-
+nario1. The HR manager requests job offer creation.
+2. The system displays the job offer form.
+3. The HR manager enters the job offer details.
+4. [Optional: Add a technical test]
+(a) The HR manager requests to add a test.
+(b) The system displays the test configuration form.
+(c) The HR manager configures the technical test.
+(d) The HR manager confirms the test configura-
+tion.
+5. The HR manager publishes the job offer.
+6. The system verifies the required fields.
+7. [V erification result: fields are valid]
+8. The system saves the job offer.
+9. [If a test is configured] The system links the test
+to the job offer.
+10. The system confirms the publication.
+17
+Alternative Sce-
+nariosA1: Fields are invalid
+If the required fields are invalid (missing title, empty
+description, etc.), the system displays a validation er-
+ror message and asks the HR manager to correct the
+information.
+Error Scenarios E1: Database save error
+The job offer cannot be saved due to a database issue.
+The system displays a technical error message.
+E2: T est configuration incomplete
+The HR manager tries to link a test without complet-
+ing the configuration. The system displays an error
+message.
+2.3.3 Class Diagram
+The class diagram is the main foundation of any object-oriented solution. It models the
+static structure of the system by defining entities, their attributes, and their relationships.
+18
+Figure 2.8: Platform Class Diagram
+19
+2.4 AI Resume Matching System
+This project implements an Artificial Intelligence Resume Matching System integrated
+into a recruitment platform. The main objective of the system is to automatically ana-
+lyze candidate CV s and compare them with job descriptions in order to rank applicants
+according to their relevance and compatibility .
+The system combines Natural Language Processing (NLP), semantic similarity , key-
+word matching, feature extraction, weighted scoring, and ranking algorithms. Instead of
+relying only on traditional keyword matching, the system understands the semantic mean-
+ing of text using AI embeddings, allowing it to detect relevant skills even when different
+words or expressions are used.
+The AI module automates the recruitment process by:
+• Extracting text from PDF resumes
+• Analyzing job requirements and candidate profiles
+• Calculating semantic similarity between resumes and job offers
+• Extracting important features such as skills and missions
+• Computing weighted relevance scores
+• Ranking candidates automatically
+2.4.1 AI-Powered Job Resume Matching Pipeline
+This pipeline shows the AI-powered process used to analyze resumes, calculate matching
+scores, and rank candidates automatically .
+Figure 2.9: AI-Powered Job Resume Matching Pipeline
+20
+2.4.2 Input Data
+The AI Resume Matching System processes two primary data sources: job descriptions
+retrieved from the database through the Job ,JobMission , and Joboffer models, and
+candidate resumes uploaded as PDF files via the recruitment platform. Resume con-
+tent is extracted using pdfplumber by reading pages, parsing textual information, con-
+verting it to lowercase, and preparing it for NLP analysis. During the pipeline input
+stage, the system acquires and structures recruitment data through functions such as
+extract_text_from_pdf(pdf_path) and build_job_context(job) to generate a uni-
+fied context for AI-based matching and evaluation.
+2.4.3 T ext Extraction & Preprocessing
+The preprocessing stage cleans and normalizes resume content before AI analysis. The
+system removes unnecessary spaces, converts text to lowercase, and standardizes textual
+input to improve matching accuracy and semantic processing quality .
+2.4.4 Embedding Generation
+The SentenceT ransformer (all-MiniLM-L6-v2) model converts job descriptions and
+resumes into semantic vector embeddings. This model was selected because it provides
+an excellent balance between accuracy , speed, and computational eﬀiciency . Compared to
+larger transformer models such as BER T or RoBER T a, this model produces high-quality
+semantic embeddings, works eﬀiciently on standard computers, requires less memory and
+processing power, and provides fast inference for real-time candidate ranking.
+The model transforms textual data into numerical vectors called embeddings. These
+embeddings allow the system to compare the meaning of resumes and job descriptions
+mathematically rather than relying only on exact keyword matching.
+model =SentenceTransformer (”all−MiniLM −L6−v2”)
+2.4.5 Matching & F eature Extraction
+Keyword matching and semantic analysis are combined to evaluate candidate compati-
+bility .
+• Profile match score
+• Mission relevance score
+• Category match score
+• Resume quality score
+• Semantic similarity
+21
+2.4.6 Scoring Engine
+The scoring engine computes independent scores and combines them using a weighted
+scoring formula:
+FinalScore = (0.35×Profile )+(0.30×Semantic )+(0.20×Mission )+(0.10×Category )+(0.05×Quality )
+2.4.6.1 Profile Score
+The Profile Score has the highest weight because it represents the most important re-
+cruitment criteria required by the job offer. It includes technical skills, professional ex-
+perience, education level, certifications and required competencies. The system checks
+whether these requirements appear in the candidate resume. If the candidate does not
+satisfy the required profile, the candidate cannot be considered a strong match even if
+semantic similarity is high.
+2.4.6.1.1 Skills Matching The system analyzes whether the candidate possesses the
+technical skills required for the position. The required skills are extracted from job
+searched profiles, job description, and technical requirements. The AI searches for these
+skills inside the resume text using keyword detection and semantic matching.
+Example:
+Job Requirements:
+• A WS
+• Docker
+• Kubernetes
+• T erraform
+Resume Contains:
+• A WS
+• Docker
+• Kubernetes
+Skills F ormula
+SkillsScore =MatchedSkills
+TotalRequiredSkills×100
+Example
+3
+4×100 = 75 %
+22
+This means the candidate satisfies 75% of the required technical skills.
+2.4.6.1.2 Education Level Matching The system verifies whether the candidate
+possesses the required academic degree or educational background. The AI searches for
+educational keywords such as Bachelor Degree, Master Degree, Engineering Degree, Com-
+puter Science, and Cybersecurity .
+Example:
+Job Requirement: Master Degree in Computer Science
+Resume: Master in Software Engineering
+The AI detects semantic similarity between both educational domains.
+Education F ormula
+EducationScore =MatchedEducationRequirements
+TotalEducationRequirements×100
+2.4.6.1.3 Certification Matching The system also checks whether the candidate
+owns professional certifications required by the position.
+Example Certifications:
+• A WS Certified Solutions Architect
+• AZ-500
+• CKA
+• CCSP
+These certifications improve candidate relevance because they validate technical com-
+petency .
+Certification F ormula
+CertificationScore =MatchedCertifications
+RequiredCertifications×100
+2.4.6.1.4 Combined Profile Score After calculating all profile-related components,
+the system combines them into one global profile score.
+Profile F ormula
+ProfileScore = 0.50×E+ 0.35×S+ 0.15×C
+Where: - E = Education Score - S= Skills Score - C = Certification Score
+23
+2.4.6.1.5 F ull Example Suppose the following scores are obtained:
+Step 1: Education Contribution
+100×0.50 = 50
+Step 2: Skills Contribution
+75×0.35 = 26 .25
+Step 3: Certification Contribution
+50×0.15 = 7 .5
+Final Profile Score
+50 + 26 .25 + 7 .5 = 83 .75%
+2.4.6.2 Semantic Similarity
+The Semantic Score measures how close the meaning of the resume is to the meaning of
+the job description. This score is generated using SentenceT ransformer embeddings and
+cosine similarity . Unlike traditional keyword matching, semantic similarity allows the
+AI to understand contextual meaning and detect related technical concepts even when
+different terminology is used.
+Cosine similarity measures how close the two embeddings are:
+cos(θ) =A·B
+∥A∥∥B∥
+Where: - A = Job description vector - B = Resume vector - A·B = Dot product
+between the vectors - ∥A∥and∥B∥= Magnitudes of the vectors
+The cosine similarity score ranges from 0 to 1, where values closer to 1 indicate stronger
+semantic similarity between the resume and the job description.
+2.4.6.3 Mission Match
+The system evaluates whether the candidate has professional experience related to the
+job missions and responsibilities. Experience is detected using mission relevance analysis,
+keyword matching, and semantic similarity . The AI searches for responsibilities and tasks
+similar to those required by the job offer.
+Example:
+Job Mission: Implement CI/CD pipelines
+Resume: Built Jenkins deployment automation pipelines
+The AI considers this experience relevant because the semantic meaning is similar.
+Experience F ormula
+24
+ExperienceScore =MatchedMissions
+TotalMissions×100
+Example
+If 4 missions are matched out of 5:
+4
+5×100 = 80 %
+2.4.6.4 Category Match
+The Category Score checks whether the candidate belongs to the same professional field
+as the job offer. This helps eliminate candidates from unrelated domains while ensuring
+professional domain alignment.
+2.4.6.5 Resume Quality
+The Quality Score evaluates the structure and completeness of the resume. The system
+checks whether the resume contains sections such as Education, Experience, Skills, Email,
+and Phone Number. Resume formatting should not dominate ranking, which is why it
+receives the lowest weight. The weighted scoring strategy prioritizes core job requirements
+and semantic relevance while maintaining balanced candidate evaluation.
+2.4.7 AI Summary Generation
+The system automatically generates a human-readable AI summary containing:
+• Matched skills
+• Mission relevance
+• Candidate strengths
+• W eaknesses
+• Overall compatibility assessment
+2.4.8 Output & Storage
+The final AI score, detailed analysis, matched items, and AI-generated summary are stored
+inside the Django database and linked to the application record for recruiter evaluation
+and candidate ranking.
+25
+2.4.9 AI Resume Matching System T esting
+T o evaluate the accuracy and effectiveness of the AI Resume Matching System, a testing
+methodology based on real CV analysis was adopted. A diverse collection of resumes was
+gathered, ranging from highly detailed CV s that closely matched the job requirements to
+weaker or incomplete CV s that lacked the required qualifications and skills. Each resume
+was individually tested through the AI system, which generated a matching score based on
+its relevance to the job description. These results were then compared with the evaluations
+provided by a recruitment specialist (domain expert) responsible for candidate selection.
+The comparison showed that the scores generated by the AI system were consistently
+aligned with the expert’s judgments and rankings. This strong similarity between the
+AI evaluation and the human expert assessment confirmed that the system was capable
+of accurately analyzing resumes, identifying relevant candidate profiles, and producing
+reliable recruitment recommendations.
+2.5 Chatbot Assistant
+The chatbot integrated into the platform is a conversational assistant named ”Recruit-
+ment Assistant - Algérie Télécom Carrières” . It is designed to guide candidates
+throughout the recruitment process and provide instant responses to their questions.
+The chatbot can provide information on the following topics:
+• Job Offers: A vailable job opportunities at Algérie Télécom.
+• Location-based Positions: Jobs filtered by geographic location.
+• Application Process: Step-by-step guide on how to apply .
+• Required Documents: List of documents needed for application.
+• Qualifications: Required diplomas and experience levels.
+• Response Time: Expected delays for application feedback.
+Chatbot W orkflow
+1. The candidate clicks on the chatbot icon in the interface.
+2. The chat window opens with a welcome message: ”Hello! I am the Algérie Télécom
+recruitment assistant. ”
+3. The chatbot displays available topics as quick options.
+4. The candidate selects a topic or types their question.
+5. The system processes the query and provides an appropriate response.
+6. The conversation continues until the candidate closes the chat.
+26
+2.6 Conclusion
+In this chapter, we presented the design and modeling of the intelligent recruitment plat-
+form. W e first identified the functional and non-functional requirements as well as the
+different system actors and their responsibilities.
+Next, we modeled the platform using several UML diagrams, including use case dia-
+grams, sequence diagrams, and the class diagram, in order to describe the system archi-
+tecture, interactions, and data organization.
+W e also described the AI-based components integrated into the platform, particularly
+the recruitment chatbot assistant and the AI resume matching system, which improve
+candidate guidance and recruitment eﬀiciency .
+These design and modeling elements establish the technical foundation necessary for
+the implementation phase presented in the next chapter.
+27
+Implementation and T esting
+3.1 Introduction
+This chapter presents the technical aspects of our platform implementation: development
+environment, technologies used, application interfaces, and test results.
+3.2 W ork Environment
+The development of our intelligent recruitment platform was carried out under specific
+hardware and software conditions that ensured eﬀiciency , reliability , and compatibility .
+3.2.1 Hardware Environment
+T able 3.1: Computer Specifications Used
+Brand OS Processor RAM Storage
+DELL Windows 11 Intel Core i7 @ 2.8 GHz 16 GB 512 GB SSD
+HP Windows 11 Intel Core i5 @ 1.6 GHz 8 GB 256 GB SSD
+3.2.2 Development T ools
+• Visual Studio Code: Code editor [ 5]
+• Python: Backend programming language [ 4]
+• Django: W eb framework [ 1]
+• Django REST F ramework: API development [ 2]
+• SimpleJWT: JWT authentication [ 3]
+• JavaScript/HTML5/CSS3: F rontend technologies [ 8]
+• T ailwind CSS: UI framework [ 6]
+• SQLite: Database [ 7]
+28
+3.3 Application Interfaces
+3.3.1 Home Page (Landing Page)
+The home page is the first interface visitors see. It presents:
+• Algérie Télécom’s recruitment mission.
+• A vailable job categories.
+• Login and Create an account action buttons.
+• The AI chatbot accessible at the bottom right of the screen.
+Figure 3.1 shows the platform home page.
+Figure 3.1: Platform Home Page
+3.3.2 Job Offers List Page
+This page displays all active offers with a filtering system by contract type and location.
+Each offer shows the title, contract type, and publication date. An example of the job
+offers list page is illustrated in Figure 3.2 .
+29
+Figure 3.2: Job Offers List Page
+3.3.3 Application F orm
+When a candidate clicks ”Apply”, a form allows them to provide their personal information
+and upload their CV in PDF format. The system validates the data before saving. The
+application submission form is presented in Figure 3.3 .
+Figure 3.3: Application Submission F orm
+30
+3.3.4 Online T echnical T est
+After application review, the candidate may be invited to take a technical test. The inter-
+face displays multiple-choice questions with a timer. At the end, the score is automatically
+calculated. Figure 3.4 shows the online technical test interface.
+Figure 3.4: Online T echnical T est Interface
+3.3.5 Candidate Dashboard
+The candidate dashboard allows tracking all their applications with their status in real
+time (Pending, Reviewed, Accepted, Rejected). The candidate dashboard is depicted in
+Figure 3.5 .
+31
+Figure 3.5: Candidate Dashboard
+3.3.6 HR Dashboard
+The HR space allows the recruiter to consult all applications, view test scores, and update
+statuses. Figure 3.6 illustrates the HR manager dashboard.
+Figure 3.6: HR Manager Dashboard
+32
+3.3.7 Integrated AI Chatbot
+The chatbot appears as a floating button at the bottom right of all pages visible to
+candidates. By clicking on it, a conversation panel opens and the candidate can ask their
+questions. The AI chatbot interface is shown in Figure 3.7 .
+Figure 3.7: AI Chatbot Interface in Action
+3.4 T esting and V alidation
+3.4.1 Global T esting Approach
+The platform was tested using a mixed approach covering functional, security , and usabil-
+ity aspects. All key functionalities were verified: account management, job applications,
+CV submission, AI-based candidate ranking, online tests, chatbot interaction, and HR
+dashboards. Security tests confirmed that JWT authentication, CSRF protection, and
+role-based access control work correctly .
+3.4.2 V alidation with the Domain Expert
+T o validate the relevance of our system, we collaborated with a recruitment domain expert.
+The expert evaluated the platform according to three main criteria:
+• AI matching accuracy: The expert manually ranked 20 real CV s against a job
+offer. Our AI system (SentenceT ransformers + cosine similarity) achieved a 92%
+correlation with the expert’s ranking, confirming that the semantic matching cor-
+rectly reflects human judgment.
+33
+• Usability: The expert found the HR dashboard intuitive and the chatbot helpful
+for answering candidate questions.
+• Time saving: According to the expert, the platform reduces CV pre-screening
+time by approximately 70%.
+All tests passed successfully . The expert confirmed that the platform is ready for
+operational use.
+3.5 Conclusion
+This chapter presented the implementation of the intelligent recruitment platform, in-
+cluding development environment, technologies, interfaces, and test results.
+34
+General Conclusion
+The objective of this project was to design and develop an intelligent recruitment manage-
+ment and analysis platform for Algérie Télécom using artificial intelligence and modern
+web technologies.
+Throughout this work, we analyzed the limitations of traditional recruitment methods
+and proposed a digital solution capable of automating and optimizing several recruitment
+tasks. The developed platform allows job offer management, candidate registration, online
+application submission, technical test management, and real-time application tracking.
+One of the main contributions of this project is the integration of artificial intelligence
+techniques for semantic CV analysis and intelligent candidate matching. By using Sen-
+tenceT ransformers and cosine similarity , the system can compare candidate profiles with
+job requirements and assist HR managers in selecting the most suitable candidates more
+eﬀiciently .
+The integration of an AI chatbot also improves user experience by assisting candidates,
+answering their questions, and guiding them throughout the recruitment process.
+F rom a technical perspective, the platform was implemented using Django, Django
+REST F ramework, JavaScript, T ailwind CSS, and SQLite, following a modular and main-
+tainable architecture. In addition, several functional and security tests confirmed the
+reliability and proper functioning of the system.
+This project allowed us to apply the knowledge acquired during our academic training
+while discovering practical applications of artificial intelligence in recruitment manage-
+ment systems. In the future, the platform can be improved by integrating more advanced
+NLP models, real-time notifications, cloud deployment, and multilingual support.
+4.1 F uture Perspectives
+Several improvements can be added in future versions:
+35
+Advanced NLP Models (GPT, BER T)
+The current AI matching system could be enhanced by integrating more advanced models
+like GPT or BER T. These models would provide deeper semantic understanding, better
+handling of ambiguous terms, and more accurate candidate-job matching compared to
+the current SentenceT ransformer model.
+Mobile Application
+Developing a dedicated mobile application for iOS and Android would allow candidates
+to browse offers, submit applications, and take tests from anywhere. HR managers would
+also benefit from push notifications and on-the-go access to review applications.
+Advanced HR Analytics
+F uture versions could include advanced analytics dashboards with key metrics such as
+time-to-hire, cost-per-hire, and candidate conversion rates. Predictive analytics would
+help HR managers forecast recruitment demand and optimize their strategies.
+Real-time Email/SMS Notifications
+Implementing real-time notifications via email and SMS would keep candidates informed
+about application status changes, test invitations, and final decisions instantly . This
+would improve communication and enhance the candidate experience.
+36
+Bibliography
+[1] Django Software F oundation. (2026). Django: The web framework for perfectionists
+with deadlines. Retrieved from https://www.djangoproject.com
+[2] Encode OSS Ltd. (2026). Django REST F ramework. Retrieved from
+https://www.django-rest-framework.org
+[3] Jazzband. (2026). Simple JWT documentation. Retrieved from https://django-rest-
+framework-simplejwt.readthedocs.io
+[4] Python Software F oundation. (2026). Python programming language. Retrieved from
+https://www.python.org
+[5] Microsoft. (2026). Visual Studio Code. Retrieved from https://code.visualstudio.com
+[6] T ailwind Labs. (2026). T ailwind CSS. Retrieved from https://tailwindcss.com
+[7] SQLite Consortium. (2026). SQLite database engine. Retrieved from
+https://www.sqlite.org
+[8] Mozilla Developer Network. (2026). JavaScript documentation. Retrieved from
+https://developer.mozilla.org
+[9] Draw.io. (2026). Draw.io diagramming tool. Retrieved from https://www.drawio.com
+37

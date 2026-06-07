@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% block title %}Create Job Offer - HR Dashboard{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <a href="{% url 'hr_dashboard' %}" class="btn btn-ghost btn-sm" style="margin-bottom: 24px;">← Back to Dashboard</a>
+
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 32px;">Create New Job Offer</h1>
+
+        <form method="POST" action="{% url 'hr_create_offer' %}" id="createOfferForm">
+            {% csrf_token %}
+
+            <!-- Job Information -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-400);">📋 Job Information</h3>
+                
+                <div class="form-group">
+                    <label for="job_title">Job Title *</label>
+                    <input type="text" id="job_title" name="job_title" class="form-control" placeholder="e.g., Cloud Infrastructure Engineer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="job_description">Job Description *</label>
+                    <textarea id="job_description" name="job_description" class="form-control" rows="4" placeholder="Describe the job role, responsibilities, and requirements..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" name="category" class="form-control" placeholder="e.g., IT, Engineering, Admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="required_education">Required Education</label>
+                        <input type="text" id="required_education" name="required_education" class="form-control" placeholder="e.g., Master Degree in Computer Science">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="required_skills">Required Skills * (comma-separated)</label>
+                    <input type="text" id="required_skills" name="required_skills" class="form-control" placeholder="e.g., Python, Django, AWS, Docker, Kubernetes" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="required_certifications">Required Certifications (comma-separated)</label>
+                    <input type="text" id="required_certifications" name="required_certifications" class="form-control" placeholder="e.g., AWS Certified Solutions Architect, AZ-500">
+                </div>
+            </div>
+
+            <!-- Offer Details -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-400);">📌 Offer Details</h3>
+                
+                <div class="form-group">
+                    <label for="offer_title">Offer Title *</label>
+                    <input type="text" id="offer_title" name="offer_title" class="form-control" placeholder="e.g., Senior Cloud Engineer - Algiers" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="offer_description">Offer Description *</label>
+                    <textarea id="offer_description" name="offer_description" class="form-control" rows="4" placeholder="Describe the offer, benefits, and expectations..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location *</label>
+                        <input type="text" id="location" name="location" class="form-control" placeholder="e.g., Algiers, Blida, Oran" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contract_type">Contract Type</label>
+                        <select id="contract_type" name="contract_type" class="form-control">
+                            <option value="CDI">CDI - Permanent</option>
+                            <option value="CDD">CDD - Fixed-term</option>
+                            <option value="Stage">Internship</option>
+                            <option value="Freelance">Freelance</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deadline">Application Deadline</label>
+                        <input type="date" id="deadline" name="deadline" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="searched_profiles">Searched Profiles</label>
+                        <input type="text" id="searched_profiles" name="searched_profiles" class="form-control" placeholder="e.g., 3+ years experience in cloud...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Missions -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-400);">🎯 Job Missions</h3>
+                <div class="mission-inputs" id="missionInputs">
+                    <div class="mission-row">
+                        <input type="text" name="missions" class="form-control" placeholder="Mission 1: e.g., Design and implement cloud infrastructure">
+                    </div>
+                    <div class="mission-row">
+                        <input type="text" name="missions" class="form-control" placeholder="Mission 2: e.g., Monitor system performance">
+                    </div>
+                    <div class="mission-row">
+                        <input type="text" name="missions" class="form-control" placeholder="Mission 3: e.g., Implement CI/CD pipelines">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" style="margin-top: 12px;" onclick="addMission()">+ Add Mission</button>
+            </div>
+
+            <!-- Technical Test (Optional) -->
+            <div class="card" style="margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--primary-400); margin: 0;">📝 Technical Test (Optional)</h3>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="enableTest" onchange="toggleTestSection()">
+                        <span style="font-size: 0.875rem; color: var(--text-secondary);">Enable</span>
+                    </label>
+                </div>
+
+                <div id="testSection" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="test_title">Test Title</label>
+                            <input type="text" id="test_title" name="test_title" class="form-control" placeholder="e.g., Cloud Engineering Assessment">
+                        </div>
+                        <div class="form-group">
+                            <label for="test_duration">Duration (minutes)</label>
+                            <input type="number" id="test_duration" name="test_duration" class="form-control" value="30" min="5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="passing_score">Passing Score (%)</label>
+                        <input type="number" id="passing_score" name="passing_score" class="form-control" value="50" min="0" max="100">
+                    </div>
+
+                    <h4 style="font-size: 1rem; font-weight: 600; margin: 24px 0 16px; color: var(--text-primary);">Questions</h4>
+                    <div id="questionsContainer">
+                        <!-- Question 1 -->
+                        <div class="question-section" id="question_1">
+                            <h4>Question 1</h4>
+                            <div class="form-group">
+                                <label>Question Text</label>
+                                <textarea name="q_1_text" class="form-control" rows="2" placeholder="Enter the question..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Option A</label>
+                                    <input type="text" name="q_1_a" class="form-control" placeholder="Option A">
+                                </div>
+                                <div class="form-group">
+                                    <label>Option B</label>
+                                    <input type="text" name="q_1_b" class="form-control" placeholder="Option B">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Option C</label>
+                                    <input type="text" name="q_1_c" class="form-control" placeholder="Option C">
+                                </div>
+                                <div class="form-group">
+                                    <label>Option D</label>
+                                    <input type="text" name="q_1_d" class="form-control" placeholder="Option D">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Correct Answer</label>
+                                <select name="q_1_correct" class="form-control" style="width: auto;">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="addQuestion()">+ Add Question</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Publish Job Offer →</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let missionCount = 3;
+    let questionCount = 1;
+
+    function addMission() {
+        missionCount++;
+        const container = document.getElementById('missionInputs');
+        const row = document.createElement('div');
+        row.className = 'mission-row';
+        row.innerHTML = `<input type="text" name="missions" class="form-control" placeholder="Mission ${missionCount}">`;
+        container.appendChild(row);
+    }
+
+    function toggleTestSection() {
+        const section = document.getElementById('testSection');
+        section.style.display = document.getElementById('enableTest').checked ? 'block' : 'none';
+    }
+
+    function addQuestion() {
+        questionCount++;
+        const container = document.getElementById('questionsContainer');
+        const section = document.createElement('div');
+        section.className = 'question-section';
+        section.id = `question_${questionCount}`;
+        section.innerHTML = `
+            <h4>Question ${questionCount}</h4>
+            <div class="form-group">
+                <label>Question Text</label>
+                <textarea name="q_${questionCount}_text" class="form-control" rows="2" placeholder="Enter the question..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Option A</label>
+                    <input type="text" name="q_${questionCount}_a" class="form-control" placeholder="Option A">
+                </div>
+                <div class="form-group">
+                    <label>Option B</label>
+                    <input type="text" name="q_${questionCount}_b" class="form-control" placeholder="Option B">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Option C</label>
+                    <input type="text" name="q_${questionCount}_c" class="form-control" placeholder="Option C">
+                </div>
+                <div class="form-group">
+                    <label>Option D</label>
+                    <input type="text" name="q_${questionCount}_d" class="form-control" placeholder="Option D">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Correct Answer</label>
+                <select name="q_${questionCount}_correct" class="form-control" style="width: auto;">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+            </div>
+        `;
+        container.appendChild(section);
+    }
+</script>
+{% endblock %}

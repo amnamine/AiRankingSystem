@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Register - Algérie Télécom Careers{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="subtitle">Join Algérie Télécom's recruitment platform</p>
+
+        {% if error %}
+        <div class="form-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            
+            <!-- Role Selection -->
+            <div class="role-selector">
+                <div class="role-option">
+                    <input type="radio" name="role" value="candidate" id="roleCandidate" checked>
+                    <label for="roleCandidate">
+                        <span class="role-icon">👤</span>
+                        <span class="role-title">Candidate</span>
+                    </label>
+                </div>
+                <div class="role-option">
+                    <input type="radio" name="role" value="hr" id="roleHR">
+                    <label for="roleHR">
+                        <span class="role-icon">🏢</span>
+                        <span class="role-title">HR Manager</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="your.email@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="+213 XX XX XX XX">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Min 8 characters" required minlength="8">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" id="password2" name="password2" class="form-control" placeholder="Repeat password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 8px;">Create Account</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 24px; color: var(--text-muted);">
+            Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

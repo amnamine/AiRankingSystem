@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Algérie Télécom AI-Powered Recruitment Platform - Apply for jobs, get AI-matched, and track your applications.">
+    <title>{% block title %}Algérie Télécom Careers{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="bg-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="{% url 'home' %}" class="navbar-brand">
+                <div class="logo-icon">AT</div>
+                <span>Algérie Télécom Careers</span>
+            </a>
+            <div class="navbar-links">
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'job_offers' %}" class="nav-link">Job Offers</a>
+                {% if user.is_authenticated %}
+                    {% if user.profile.role == 'hr' %}
+                        <a href="{% url 'hr_dashboard' %}" class="nav-link">HR Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'candidate_dashboard' %}" class="nav-link">Dashboard</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="btn btn-outline btn-sm">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Algérie Télécom - AI Recruitment Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <button class="chatbot-trigger" id="chatbotTrigger" onclick="toggleChatbot()">💬</button>
+    
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div class="avatar">🤖</div>
+            <div class="info">
+                <h4>Recruitment Assistant</h4>
+                <span>Algérie Télécom Carrières</span>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="chat-message bot">
+                Hello! I am the Algérie Télécom recruitment assistant. How can I help you today? 😊
+            </div>
+        </div>
+        <div class="quick-options" id="quickOptions">
+            <span class="quick-option" onclick="sendQuickMessage('What job offers are available?')">📋 Job Offers</span>
+            <span class="quick-option" onclick="sendQuickMessage('How do I apply for a position?')">📝 How to Apply</span>
+            <span class="quick-option" onclick="sendQuickMessage('What documents do I need?')">📄 Documents</span>
+            <span class="quick-option" onclick="sendQuickMessage('What qualifications are required?')">🎓 Qualifications</span>
+            <span class="quick-option" onclick="sendQuickMessage('How long for a response?')">⏱️ Response Time</span>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // CSRF Token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Chatbot
+        let chatHistory = [];
+        
+        function toggleChatbot() {
+            const win = document.getElementById('chatbotWindow');
+            win.classList.toggle('open');
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `chat-message ${sender}`;
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatMessages');
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.id = 'typingIndicator';
+            typing.innerHTML = '<span></span><span></span><span></span>';
+            container.appendChild(typing);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const el = document.getElementById('typingIndicator');
+            if (el) el.remove();
+        }
+
+        function sendQuickMessage(msg) {
+            document.getElementById('chatInput').value = msg;
+            sendMessage();
+            document.getElementById('quickOptions').style.display = 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            chatHistory.push({role: 'user', content: message});
+            input.value = '';
+            showTyping();
+
+            try {
+                const response = await fetch('/api/chatbot/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({message, history: chatHistory}),
+                });
+                const data = await response.json();
+                hideTyping();
+                
+                if (data.response) {
+                    addMessage(data.response, 'bot');
+                    chatHistory.push({role: 'assistant', content: data.response});
+                } else {
+                    addMessage('Sorry, I could not process your request.', 'bot');
+                }
+            } catch (err) {
+                hideTyping();
+                addMessage('Connection error. Please try again.', 'bot');
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

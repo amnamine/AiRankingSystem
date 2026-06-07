@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Job Offers - Algérie Télécom Careers{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+    <div class="page-title-bar">
+        <div>
+            <h1>Job Offers</h1>
+            <p style="color: var(--text-secondary); margin-top: 4px;">Discover opportunities at Algérie Télécom</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form class="filters-bar" method="GET" action="{% url 'job_offers' %}">
+        <select name="contract_type" class="form-control" style="width: auto;" onchange="this.form.submit()">
+            <option value="">All Contract Types</option>
+            <option value="CDI" {% if current_contract == 'CDI' %}selected{% endif %}>CDI - Permanent</option>
+            <option value="CDD" {% if current_contract == 'CDD' %}selected{% endif %}>CDD - Fixed-term</option>
+            <option value="Stage" {% if current_contract == 'Stage' %}selected{% endif %}>Internship</option>
+            <option value="Freelance" {% if current_contract == 'Freelance' %}selected{% endif %}>Freelance</option>
+        </select>
+        <select name="location" class="form-control" style="width: auto;" onchange="this.form.submit()">
+            <option value="">All Locations</option>
+            {% for loc in locations %}
+            <option value="{{ loc }}" {% if current_location == loc %}selected{% endif %}>{{ loc }}</option>
+            {% endfor %}
+        </select>
+        <select name="category" class="form-control" style="width: auto;" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if current_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+        {% if current_contract or current_location or current_category %}
+        <a href="{% url 'job_offers' %}" class="btn btn-ghost btn-sm">✕ Clear Filters</a>
+        {% endif %}
+    </form>
+
+    <!-- Offers Grid -->
+    {% if offers %}
+    <div class="offers-grid">
+        {% for offer in offers %}
+        <div class="offer-card" style="animation-delay: {{ forloop.counter0 }}00ms;">
+            <div class="offer-card-header">
+                <div>
+                    <h3>{{ offer.title }}</h3>
+                    <div class="offer-meta">
+                        <span class="tag tag-blue">{{ offer.get_contract_type_display }}</span>
+                        <span class="tag tag-orange">📍 {{ offer.location }}</span>
+                        {% if offer.job.category %}
+                        <span class="tag tag-purple">{{ offer.job.category }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <p class="offer-card-description">{{ offer.description|truncatewords:40 }}</p>
+            <div class="offer-card-footer">
+                <span class="offer-date">📅 {{ offer.published_date|date:"M d, Y" }}</span>
+                <a href="{% url 'job_offer_detail' offer.id %}" class="btn btn-primary btn-sm">View Details →</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No job offers found</h3>
+        <p>Try adjusting your filters or check back later for new opportunities.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
