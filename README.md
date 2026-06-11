@@ -82,7 +82,7 @@ An AI-powered platform that:
 ### AI System
 | Feature | Description |
 |---------|-------------|
-| 🧠 Approach 1 | SentenceTransformer (all-MiniLM-L6-v2) + Cosine Similarity + Weighted Scoring |
+| 🧠 Approach 1 | SentenceTransformer (BAAI/bge-m3) + Cosine Similarity + Weighted Scoring |
 | 🤖 Approach 2 | Groq API (Llama 3.3 70B) + RAG for enhanced LLM analysis |
 | 📊 Combined Score | Averages both approaches for robustness |
 | 💬 RAG Chatbot | Groq + database-retrieved context for accurate responses |
@@ -123,7 +123,7 @@ An AI-powered platform that:
 
 ### Approach 1: Embedding Model
 
-Uses **SentenceTransformer (all-MiniLM-L6-v2)** to:
+Uses **SentenceTransformer (BAAI/bge-m3)** to:
 1. Convert job descriptions and resumes into semantic vector embeddings
 2. Compute cosine similarity between vectors
 3. Extract features (skills, education, certifications, missions)
@@ -174,7 +174,7 @@ Uses **Groq API with Llama 3.3 70B Versatile** to:
 | **Backend** | Python 3.10+, Django 6.0 |
 | **Database** | SQLite |
 | **Frontend** | HTML5, CSS3, JavaScript |
-| **AI/NLP** | SentenceTransformers (all-MiniLM-L6-v2) |
+| **AI/NLP** | SentenceTransformers (BAAI/bge-m3) |
 | **LLM** | Groq API - Llama 3.3 70B Versatile |
 | **PDF Processing** | pdfplumber |
 | **ML Libraries** | scikit-learn, NumPy |

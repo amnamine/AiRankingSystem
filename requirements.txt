@@ -6,6 +6,7 @@ django-cors-headers>=4.9
 
 # AI & NLP
 sentence-transformers>=5.0
+einops>=0.7.0
 scikit-learn>=1.8
 numpy>=2.0
 

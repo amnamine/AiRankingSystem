@@ -14,13 +14,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 from groq import Groq
 from django.conf import settings
 
-# Load the embedding model (all-MiniLM-L6-v2 as specified in thesis)
+# Load the embedding model (BAAI/bge-m3 supporting English, French, Arabic with 8192-token context)
 _model = None
 
 def get_embedding_model():
     global _model
     if _model is None:
-        _model = SentenceTransformer('all-MiniLM-L6-v2')
+        _model = SentenceTransformer('BAAI/bge-m3')
     return _model
 
 
